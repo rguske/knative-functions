@@ -1,0 +1,5 @@
+SMTP_SERVER=mail.gmx.net
+SMTP_PORT=587
+EMAIL_SENDER=rguske@gmx.net
+EMAIL_PASSWORD=}Bq2c=I!wL;7KH#:
+RECIPIENT_EMAIL=robert.guske@gmail.com

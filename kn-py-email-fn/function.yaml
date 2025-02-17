@@ -1,0 +1,58 @@
+oc create -f - <<EOF
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: kn-py-email-fn
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: "1"
+        autoscaling.knative.dev/minScale: "1"
+    spec:
+      containers:
+        - image: quay.io/rguske/kn-py-email-fn:1.0
+          env:
+            - name: SMTP_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: email-secret
+                  key: smtp_server
+            - name: SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: email-secret
+                  key: smtp_port
+            - name: EMAIL_SENDER
+              valueFrom:
+                secretKeyRef:
+                  name: email-secret
+                  key: email_sender
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: email-secret
+                  key: email_password
+            - name: RECIPIENT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: email-secret
+                  key: recipient_email
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: trigger-kn-py-email-fn
+  labels:
+    eventing.knative.dev/broker: inmem-broker-transformer
+spec:
+  broker: inmem-broker-transformer
+  filter:
+    attributes:
+      type: "dev.knative.apiserver.resource.add"
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: kn-py-email-fn
+EOF

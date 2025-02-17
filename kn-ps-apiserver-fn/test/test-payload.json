@@ -1,0 +1,56 @@
+
+    {
+    "apiVersion": "v1",
+    "count": 1,
+    "eventTime": null,
+    "firstTimestamp": "2023-09-04T13:24:37Z",
+    "involvedObject": {
+      "apiVersion": "v1",
+      "fieldPath": "spec.containers{webapp}",
+      "kind": "Pod",
+      "name": "webapp1234-6f97d5bcc-gnpjc",
+      "namespace": "vmware-functions",
+      "resourceVersion": "54564161",
+      "uid": "6289d18b-21f9-488f-a365-4445be65e15a"
+    },
+    "kind": "Event",
+    "lastTimestamp": "2023-09-04T13:24:37Z",
+    "message": "Stopping container webapp",
+    "metadata": {
+      "creationTimestamp": "2023-09-04T13:24:37Z",
+      "managedFields": [
+        {
+          "apiVersion": "v1",
+          "fieldsType": "FieldsV1",
+          "fieldsV1": {
+            "f:count": {},
+            "f:firstTimestamp": {},
+            "f:involvedObject": {},
+            "f:lastTimestamp": {},
+            "f:message": {},
+            "f:reason": {},
+            "f:source": {
+              "f:component": {},
+              "f:host": {}
+            },
+            "f:type": {}
+          },
+          "manager": "kubelet",
+          "operation": "Update",
+          "time": "2023-09-04T13:24:37Z"
+        }
+      ],
+      "name": "webapp1234-6f97d5bcc-gnpjc.1781b4efff3f99d5",
+      "namespace": "vmware-functions",
+      "resourceVersion": "54564937",
+      "uid": "3a89ae19-0f7a-452f-839a-f694773c2b50"
+    },
+    "reason": "Killing",
+    "reportingComponent": "",
+    "reportingInstance": "",
+    "source": {
+      "component": "kubelet",
+      "host": "rguske-tkc-eventing-np-1-lrvzf-6759fb74b4-4l52w"
+    },
+    "type": "Normal"
+    }

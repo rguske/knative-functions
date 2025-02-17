@@ -1,0 +1,15 @@
+FROM --platform=linux/amd64 registry.access.redhat.com/ubi9/python-312
+
+WORKDIR /app
+
+ADD requirements.txt /app/requirements.txt
+ADD Procfile /app/Procfile
+
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+
+ADD handler.py /app/handler.py
+
+ENV PORT 8080
+EXPOSE 8080
+
+CMD ["python", "/app/handler.py"]

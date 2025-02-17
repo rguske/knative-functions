@@ -1,0 +1,36 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: kn-ps-apiserver-slack
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: "1"
+        autoscaling.knative.dev/minScale: "1"
+    spec:
+      containers:
+        - image: rguske/kn-ps-apiserver-slack:2.0
+          envFrom:
+            - secretRef:
+                name: apiserver-slack-secret
+          env:
+            - name: FUNCTION_DEBUG
+              value: "false"
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: kn-ps-apiserver-slack-trigger
+spec:
+  broker: rabbitmq-broker
+  filter:
+    attributes:
+      type: dev.knative.apiserver.resource.update
+    data:
+      reason: NodeNotSchedulable
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: kn-ps-apiserver-slack

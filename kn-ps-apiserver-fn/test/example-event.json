@@ -1,0 +1,51 @@
+{
+  "apiVersion": "v1",
+  "count": 3,
+  "eventTime": null,
+  "firstTimestamp": "2023-09-07T14:36:03Z",
+  "involvedObject": {
+    "kind": "Node",
+    "name": "rguske-tkc-eventing-np-2-fpbf2-d77586c79-s7k26",
+    "uid": "rguske-tkc-eventing-np-2-fpbf2-d77586c79-s7k26"
+  },
+  "kind": "Event",
+  "lastTimestamp": "2023-09-07T14:48:09Z",
+  "message": "Node rguske-tkc-eventing-np-2-fpbf2-d77586c79-s7k26 status is now: NodeNotSchedulable",
+  "metadata": {
+    "creationTimestamp": "2023-09-07T14:36:03Z",
+    "managedFields": [
+      {
+        "apiVersion": "v1",
+        "fieldsType": "FieldsV1",
+        "fieldsV1": {
+          "f:count": {},
+          "f:firstTimestamp": {},
+          "f:involvedObject": {},
+          "f:lastTimestamp": {},
+          "f:message": {},
+          "f:reason": {},
+          "f:source": {
+            "f:component": {},
+            "f:host": {}
+          },
+          "f:type": {}
+        },
+        "manager": "kubelet",
+        "operation": "Update",
+        "time": "2023-09-07T14:36:03Z"
+      }
+    ],
+    "name": "rguske-tkc-eventing-np-2-fpbf2-d77586c79-s7k26.1782a4939981938f",
+    "namespace": "default",
+    "resourceVersion": "58665597",
+    "uid": "59e77b77-e277-4c36-9941-b622858e7c00"
+  },
+  "reason": "NodeNotSchedulable",
+  "reportingComponent": "",
+  "reportingInstance": "",
+  "source": {
+    "component": "kubelet",
+    "host": "rguske-tkc-eventing-np-2-fpbf2-d77586c79-s7k26"
+  },
+  "type": "Normal"
+}

@@ -1,0 +1,56 @@
+import os
+from flask import Flask, request, jsonify
+from cloudevents.http import from_http
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+app = Flask(__name__)
+
+# Load email configurations from environment variables
+SMTP_SERVER = os.getenv('SMTP_SERVER')
+SMTP_PORT = int(os.getenv('SMTP_PORT', 587))  # Default to 587 if not set
+EMAIL_SENDER = os.getenv('EMAIL_SENDER')
+EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+RECIPIENT_EMAIL = os.getenv('RECIPIENT_EMAIL')
+
+
+def send_email(subject, body, recipient):
+    msg = MIMEMultipart()
+    msg['From'] = EMAIL_SENDER
+    msg['To'] = recipient
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server.set_debuglevel(1)  # Enables verbose logging
+        server.starttls()
+        server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+        server.sendmail(EMAIL_SENDER, recipient, msg.as_string())
+        server.quit()
+        return True
+    except Exception as e:
+        print(f"SMTP Error: {e}")
+        return False
+
+
+@app.route("/cloudevent", methods=["POST"])
+def handle_cloudevent():
+    try:
+        event = from_http(request.headers, request.get_data())
+        
+        subject = f"CloudEvent Received: {event['type']}"
+        body = f"CloudEvent Details:\n\nType: {event['type']}\nSource: {event['source']}\nID: {event['id']}\nName: {event['name']}\nNamespace: {event['namespace']}\nKind: {event['kind']}\nCPU-Cores: {event['cpu-cores']}\nCPU-Sockets: {event['cpu-sockets']}\nCPU-Threads: {event['cpu-threads']}\nMemory: {event['memory']}\nStorageClass: {event['storageclass']}\nNetwork: {event['network']}"
+        success = send_email(subject, body, RECIPIENT_EMAIL)
+        
+        if success:
+            return jsonify({"message": "Email sent successfully"}), 200
+        else:
+            return jsonify({"message": "Failed to send email"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080, debug=True)
