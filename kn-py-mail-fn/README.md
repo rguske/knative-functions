@@ -16,11 +16,11 @@ curl -i -d@test/testevent.json localhost:8080
 
 ```code
 kubectl create secret generic email-secret \
-  --from-literal=smtp_server="mail.gmx.net" \
-  --from-literal=smtp_port="587" \
-  --from-literal=email_sender="rguske@gmx.net" \
-  --from-literal=email_password="}Bq2c=I!wL;7KH#:" \
-  --from-literal=recipient_email="robert.guske@gmail.com"
+  --from-literal=smtp_server="" \
+  --from-literal=smtp_port="" \
+  --from-literal=email_sender="" \
+  --from-literal=email_password="" \
+  --from-literal=recipient_email=""
 ```
 
 ```yaml

@@ -11,20 +11,21 @@ spec:
         autoscaling.knative.dev/minScale: "1"
     spec:
       containers:
-        - image: quay.io/rguske/kn-py-echo:1.2
+        - image: quay.io/rguske/py-echo-function:1.0
 ---
 apiVersion: eventing.knative.dev/v1
 kind: Trigger
 metadata:
-  name: py-echo-trigger
+  labels:
+    eventing.knative.dev/broker: inmem-broker-transformer
+  name: trigger-py-echo-fn
 spec:
-  broker: inmem-broker
+  broker: inmem-broker-transformer
   filter:
-    attributes:
-      type: dev.knative.apiserver.resource.update
+    attributes: {}
   subscriber:
     ref:
       apiVersion: serving.knative.dev/v1
       kind: Service
-      name: kn-py-echo
+      name: kn-py-echo-fn
 EOF

@@ -45,6 +45,8 @@ def send_email(subject, body, recipient):
 
 
 @app.route("/", methods=["POST"])
+def health_check():
+    return "Service is up", 200
 def handle_cloudevent():
     try:
         event = from_http(request.headers, request.get_data())
@@ -77,6 +79,6 @@ Network: {event.get('network', 'N/A')}
         print(f"Error processing CloudEvent: {e}")
         return jsonify({"error": str(e)}), 400
 
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    port = int(os.getenv("PORT", 8080))  # Ensure Knative uses port 8080
+    app.run(host="0.0.0.0", port=port, debug=True)

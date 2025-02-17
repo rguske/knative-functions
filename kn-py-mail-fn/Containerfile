@@ -9,7 +9,11 @@ RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 ADD handler.py /app/handler.py
 
-ENV PORT 8080
+# Set environment variables for Flask
+ENV PORT=8080
+ENV PYTHONUNBUFFERED=1
+
+# Expose the port Knative expects
 EXPOSE 8080
 
 CMD ["python", "/app/handler.py"]

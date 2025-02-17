@@ -11,7 +11,9 @@ spec:
         autoscaling.knative.dev/minScale: "1"
     spec:
       containers:
-        - image: quay.io/rguske/kn-py-email-fn:1.0
+        - image: quay.io/rguske/kn-py-email-fn:1.3
+          ports:
+            - containerPort: 8080
           env:
             - name: SMTP_SERVER
               valueFrom:
