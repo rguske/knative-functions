@@ -1,0 +1,30 @@
+oc create -f - <<EOF
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: kn-py-echo-fn
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: "1"
+        autoscaling.knative.dev/minScale: "1"
+    spec:
+      containers:
+        - image: quay.io/rguske/kn-py-echo:1.2
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: py-echo-trigger
+spec:
+  broker: inmem-broker
+  filter:
+    attributes:
+      type: dev.knative.apiserver.resource.update
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: kn-py-echo
+EOF

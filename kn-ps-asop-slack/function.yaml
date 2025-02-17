@@ -1,0 +1,34 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: kn-ps-asop-slack
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: "1"
+        autoscaling.knative.dev/minScale: "1"
+    spec:
+      containers:
+        - image: registry.cloud-garage.net/rguske/kn-ps-asop-slack@sha256:9084845e206a5c72acaeae31e2d758deb87e5029bb9ba86137cc45559aa6e1a9
+          envFrom:
+            - secretRef:
+                name: asop-slack-secret
+          env:
+            - name: FUNCTION_DEBUG
+              value: "false"
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: kn-ps-asop-slack-trigger
+spec:
+  broker: rabbitmq-broker
+  filter:
+    attributes:
+      type: asop.openc2.event.set-security-tag.v0
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: kn-ps-asop-slack

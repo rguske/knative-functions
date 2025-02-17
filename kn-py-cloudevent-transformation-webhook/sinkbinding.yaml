@@ -1,0 +1,14 @@
+apiVersion: sources.knative.dev/v1
+kind: SinkBinding
+metadata:
+  name: kn-py-cloudevent-transformation-function-sinkbinding
+spec:
+  subject:
+    apiVersion: serving.knative.dev/v1
+    kind: Service
+    name: kn-py-cloudevent-transformation-function
+  sink:
+    ref:
+      apiVersion: eventing.knative.dev/v1
+      kind: Broker
+      name: rabbitmq-broker

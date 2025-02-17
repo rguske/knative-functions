@@ -1,0 +1,20 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: kn-py-cloudevent-transformation-function
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/max-scale: "1"
+        autoscaling.knative.dev/min-scale: "1"
+    spec:
+      containers:
+        - image: projects.registry.vmware.com/tanzu_ese_poc/rguske/kn-py-cloudevent-transformation-function:1.0
+          env:
+            - name: ADDRESS
+              value: "0.0.0.0"
+            - name: WEBHOOK_PATH
+              value: "/webhook" # default
+            - name: DEBUG
+              value: "true"

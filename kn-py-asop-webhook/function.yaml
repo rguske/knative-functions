@@ -1,0 +1,20 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: kn-dev-py-asop-webhook
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/max-scale: "1"
+        autoscaling.knative.dev/min-scale: "1"
+    spec:
+      containers:
+        - image: registry.cloud-garage.net/rguske/kn-dev-py-asop-webhook@sha256:463304f6a030181a71a2551b04dd02ec55650715bd0a6403db22eb38ad11b756
+          env:
+            - name: ADDRESS
+              value: "0.0.0.0"
+            - name: WEBHOOK_PATH
+              value: "/webhook" # default
+            - name: DEBUG
+              value: "true"

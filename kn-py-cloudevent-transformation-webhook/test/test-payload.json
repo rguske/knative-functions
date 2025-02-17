@@ -1,0 +1,18 @@
+{
+	"action": "created",
+	"example": {
+	  "attendee": {
+		"feelings": "EXCITED"
+	  }
+	},
+	"actuator": {
+	  "event": {
+		"organization": "Container Days 2023"
+	  }
+	},
+	"next": {
+		"up": "Coffee Break - W00t"
+	},
+
+	"command_id": "0866ff41-0d90-4003-a0a6-06b4c0d16cfa"
+}

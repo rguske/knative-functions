@@ -1,0 +1,1 @@
+SLACK_SECRET={"SLACK_WEBHOOK_URL":"https://hooks.slack.com/services/webhook-id","SLACK_MESSAGE_PRETEXT":":knative: Slack Function :knative:"}
