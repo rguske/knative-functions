@@ -45,8 +45,8 @@ def send_email(subject, body, recipient):
 
 
 @app.route("/", methods=["POST"])
-def health_check():
-    return "Service is up", 200
+# def health_check():
+#     return "Service is up", 200
 def handle_cloudevent():
     try:
         event = from_http(request.headers, request.get_data())
@@ -60,10 +60,10 @@ ID: {event.get('id', 'N/A')}
 Name: {event.get('name', 'N/A')}
 Namespace: {event.get('namespace', 'N/A')}
 Kind: {event.get('kind', 'N/A')}
-CPU-Cores: {event.get('cpu-cores', 'N/A')}
-CPU-Sockets: {event.get('cpu-sockets', 'N/A')}
-CPU-Threads: {event.get('cpu-threads', 'N/A')}
+CPU-Cores: {event.get('cpucores', 'N/A')}
+CPU-Sockets: {event.get('cpusockets', 'N/A')}
 Memory: {event.get('memory', 'N/A')}
+DataSource: {event.get('datasource', 'N/A')}
 StorageClass: {event.get('storageclass', 'N/A')}
 Network: {event.get('network', 'N/A')}
 """

@@ -1,16 +1,16 @@
-{
-    "specversion": "1.0",
-    "type": "dev.knative.apiserver.resource.delete",
-    "source": "https://172.30.0.1:443",
-    "subject": "/apis/kubevirt.io/v1/namespaces/rguske-eventing/virtualmachines/rhel9-eventing-robert-4",
-    "id": "680e7dd2-2f41-456f-8b75-6f95f85ca5a1",
-    "time": "2025-02-16T18:36:04.391Z",
-    "kind": "VirtualMachine",
-    "name": "rhel9-eventing-robert-4",
-    "namespace": "rguske-eventing",
-    "cpucores": 6,
-    "cpusockets": 1,
-    "memory": "1536Mi",
-    "storageclass": "coe-netapp-san",
-    "network": "default"
+Transformed input {
+  "specversion": "1.0",
+  "type": "dev.knative.apiserver.resource.add",
+  "source": "https://172.30.0.1:443",
+  "subject": "/apis/kubevirt.io/v1/namespaces/rguske-eventing/virtualmachines/rhel9-vm-2",
+  "id": "ce2cbd1c-231d-4b61-b091-dba2c56721f4",
+  "time": "2025-04-04T08:43:28.460Z",
+  "kind": "VirtualMachine",
+  "name": "rhel9-vm-2",
+  "namespace": "rguske-eventing",
+  "cpucores": 4,
+  "cpusockets": 2,
+  "memory": "4Gi",
+  "storageclass": "coe-netapp-san",
+  "network": "default"
 }

@@ -1,0 +1,20 @@
+FROM --platform=linux/amd64 registry.access.redhat.com/ubi9/python-312
+
+WORKDIR /app
+
+ADD requirements.txt /app/requirements.txt
+ADD Procfile /app/Procfile
+
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+
+ADD handler.py /app/handler.py
+
+# Set environment variables for Flask
+ENV PORT=8080
+ENV PYTHONUNBUFFERED=1
+ENV FLASK_ENV=development
+
+# Expose the port Knative expects
+EXPOSE 8080
+
+CMD ["python", "/app/handler.py"]

@@ -1,0 +1,16 @@
+{
+    "specversion": "1.0",
+    "type": "dev.knative.apiserver.resource.add",
+    "source": "https://172.30.0.1:443",
+    "subject": "/apis/kubevirt.io/v1/namespaces/rguske-eventing/virtualmachines/rhel9-eventing-robert-1",
+    "id": "680e7dd2-2f41-456f-8b75-6f95f85ca5a1",
+    "time": "2025-02-16T18:36:04.391Z",
+    "kind": "VirtualMachine",
+    "name": "rhel9-eventing-robert-1",
+    "namespace": "rguske-eventing",
+    "cpucores": 6,
+    "cpusockets": 1,
+    "memory": "1536Mi",
+    "storageclass": "my-storageclass",
+    "network": "default"
+}

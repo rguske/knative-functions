@@ -1,0 +1,5 @@
+DB_HOST=10.10.10.10
+DB_PORT=5432
+DB_NAME=vmdb
+DB_USER=postgres
+DB_PASSWORD=redhat
