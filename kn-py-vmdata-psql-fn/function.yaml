@@ -39,3 +39,45 @@ spec:
                 secretKeyRef:
                   name: psql-secret
                   key: db_password
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  labels:
+    eventing.knative.dev/broker: broker-apiserversource
+  name: trigger-transformer-vm-add
+spec:
+  broker: broker-apiserversource
+  filter:
+    attributes:
+      type: dev.knative.apiserver.resource.add
+  subscriber:
+    ref:
+      apiVersion: eventing.knative.dev/v1alpha1
+      kind: EventTransform
+      name: vmdata-transform
+  delivery:
+    retry: 3
+    backoffPolicy: linear
+    backoffDelay: PT5S
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  labels:
+    eventing.knative.dev/broker: broker-apiserversource
+  name: trigger-transformer-vm-delete
+spec:
+  broker: broker-apiserversource
+  filter:
+    attributes:
+      type: dev.knative.apiserver.resource.delete
+  subscriber:
+    ref:
+      apiVersion: eventing.knative.dev/v1alpha1
+      kind: EventTransform
+      name: vmdata-transform
+  delivery:
+    retry: 3
+    backoffPolicy: linear
+    backoffDelay: PT5S
