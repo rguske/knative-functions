@@ -1,0 +1,25 @@
+{
+    "id": "08179137-b8e0-4973-b05f-8f212bf5003b",
+    "source": "https://10.0.0.1:443/sdk",
+    "specversion": "1.0",
+    "eventclass": "event",
+    "type": "com.redhat.openashift.test.v0",
+    "time": "2025-12-03T11:00:54.9052539Z",
+    "data": {
+    	"action": "created",
+    	"example": {
+    	  "attendee": {
+    		"feelings": "EXCITED"
+    	  }
+    	},
+    	"actuator": {
+    	  "event": {
+    		"organization": "31. OpenShift Anwendertreffen"
+    	  }
+    	},
+    	"session": {
+    		"title": "Event-Driven Automation"
+    	},
+    "datacontenttype": "application/json"
+    }
+}
