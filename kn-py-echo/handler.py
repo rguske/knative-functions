@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
-from cloudevents.http import from_http
-import logging,json
+from cloudevents.core.bindings.http import from_http_event, HTTPMessage
+import logging, json
 
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
@@ -8,18 +8,18 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def echo():
     try:
-        event = from_http(request.headers, request.get_data(),None)
+        event = from_http_event(HTTPMessage(dict(request.headers), request.get_data()))
 
-        data = event.data
+        data = event.get_data()
         # hack to handle non JSON payload, e.g. xml
         if not isinstance(data,dict):
-            data = str(event.data)
+            data = str(data)
 
         e = {
-            "attributes": event._attributes,
+            "attributes": dict(event.get_attributes()),
             "data": data
         }
-        app.logger.info(f'"***cloud event*** {json.dumps(e)}')
+        app.logger.info(f'"***cloud event*** {json.dumps(e, default=str)}')
         return {}, 204
     except Exception as e:
         sc = 400
