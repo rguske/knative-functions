@@ -10,8 +10,24 @@ Example Python function with `Flask` REST API running in Knative to echo
 [Buildpacks](https://buildpacks.io) are used to create the container image.
 
 ```bash
-IMAGE=<docker-username>/kn-py-echo:1.2
+IMAGE=<docker-username>/kn-py-echo:1.3
 pack build -B gcr.io/buildpacks/builder:v1 ${IMAGE}
+```
+
+## Step 1 (alternative) - Build with Podman
+
+Instead of Buildpacks, you can build the container image directly from the
+included `Containerfile` using [Podman](https://podman.io) (or Docker):
+
+```bash
+IMAGE=<registry>/kn-py-echo:1.3
+podman build -t ${IMAGE} -f Containerfile .
+```
+
+Run it the same way as the Buildpacks-built image (see Step 2 below):
+
+```bash
+podman run -e PORT=8080 -it --rm -p 8080:8080 ${IMAGE}
 ```
 
 ## Step 2 - Test
@@ -19,7 +35,7 @@ pack build -B gcr.io/buildpacks/builder:v1 ${IMAGE}
 Verify the container image works by executing it locally.
 
 ```bash
-docker run -e PORT=8080 -it --rm -p 8080:8080 <docker-username>/kn-py-echo:1.2
+docker run -e PORT=8080 -it --rm -p 8080:8080 <docker-username>/kn-py-echo:1.3
 ```
 You should see output similar to the following:
 ```
@@ -75,7 +91,7 @@ Return to the previous terminal window where you started the docker image, and y
 Push your container image to an accessible registry such as Docker once you're done developing and testing your function logic.
 
 ```console
-docker push <docker-username>/kn-py-echo:1.2
+docker push <docker-username>/kn-py-echo:1.3
 ```
 Edit the `function.yaml` file with the name of the container image from Step 1 if you made any changes. If not, the default VMware container image will suffice. By default, the function deployment will filter on the `VmPoweredOffEvent` vCenter Server Event. If you wish to change this, update the `subject` field within `function.yaml` to the desired event type.
 
