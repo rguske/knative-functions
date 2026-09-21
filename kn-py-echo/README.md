@@ -22,6 +22,32 @@ IMAGE=<registry>/<repo>/kn-py-echo:1.3
 podman build -t ${IMAGE} -f Containerfile .
 ```
 
+## Step 1 (alternative) - Build a multi-arch image with Podman
+
+If the image needs to run on nodes with different CPU architectures (e.g.
+`amd64` and `arm64` in the same cluster), build a multi-arch manifest list
+instead of a single-platform image. On macOS, `podman machine` ships with
+the QEMU emulation needed to build for architectures other than the host's,
+so this works out of the box — no extra setup required.
+
+```shell
+IMAGE=<registry>/<repo>/kn-py-echo:1.3
+podman manifest create ${IMAGE}
+podman build --platform=linux/amd64,linux/arm64 --manifest ${IMAGE} -f Containerfile .
+```
+
+Push the whole manifest list (both architectures) to the registry:
+
+```shell
+podman manifest push --all ${IMAGE} docker://${IMAGE}
+```
+
+Verify the pushed manifest references both architectures:
+
+```shell
+podman manifest inspect ${IMAGE}
+```
+
 ## Step 2 - Test
 
 Verify the container image works by executing it locally.
@@ -66,6 +92,10 @@ Push your container image to an accessible registry such as Docker once you're d
 ```shell
 docker push <docker-username>/<repo>/kn-py-echo:1.3
 ```
+
+> If you built a multi-arch manifest list instead (Step 1 alternative
+> above), push it with `podman manifest push --all` as shown there, rather
+> than a plain `docker push` / `podman push`.
 
 Edit the `function.yaml` file with the name of the container image from Step 1 if you made any changes. If not, the default VMware container image will suffice. By default, the function deployment will filter on the `VmPoweredOffEvent` vCenter Server Event. If you wish to change this, update the `subject` field within `function.yaml` to the desired event type.
 
