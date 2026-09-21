@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, Response
 from cloudevents.core.bindings.http import from_http_event, HTTPMessage
 import logging, json
 
@@ -19,8 +19,9 @@ def echo():
             "attributes": dict(event.get_attributes()),
             "data": data
         }
-        app.logger.info(f'"***cloud event*** {json.dumps(e, default=str)}')
-        return {}, 204
+        payload = json.dumps(e, indent=2, default=str)
+        app.logger.info(f'***cloud event*** {payload}')
+        return Response(payload, status=200, mimetype='application/json')
     except Exception as e:
         sc = 400
         msg = f'could not decode cloud event: {e}'
@@ -29,8 +30,7 @@ def echo():
             'status': sc,
             'error': msg,
         }
-        resp = jsonify(message)
-        resp.status_code = sc
+        resp = Response(json.dumps(message, indent=2), status=sc, mimetype='application/json')
         return resp
 
 # hint: run with FLASK_ENV=development FLASK_APP=handler.py flask run
