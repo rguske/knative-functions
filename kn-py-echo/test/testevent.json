@@ -1,49 +1,179 @@
 {
-    "id": "08179137-b8e0-4973-b05f-8f212bf5003b",
-    "source": "https://10.0.0.1:443/sdk",
-    "specversion": "1.0",
-    "eventclass": "event",
-    "type": "com.vmware.vsphere.VmPoweredOffEvent.v0",
-    "time": "2020-02-11T21:29:54.9052539Z",
-    "data": {
-        "Key": 9902,
-        "ChainId": 9895,
-        "CreatedTime": "2020-02-11T21:28:23.677595Z",
-        "UserName": "VSPHERE.LOCAL\\Administrator",
-        "Datacenter": {
-            "Name": "testDC",
-            "Datacenter": {
-                "Type": "Datacenter",
-                "Value": "datacenter-2"
-            }
+  "apiversion": "kubevirt.io/v1",
+  "datacontenttype": "application/json",
+  "id": "021e7058-7893-426a-982e-a1626e9825ce",
+  "kind": "VirtualMachine",
+  "knativearrivaltime": "2026-09-21T14:51:40.220415968Z",
+  "name": "rhel-vm",
+  "namespace": "kubevirt-eventing",
+  "source": "https://172.30.0.1:443",
+  "specversion": "1.0",
+  "subject": "/apis/kubevirt.io/v1/namespaces/kubevirt-eventing/virtualmachines/rhel-vm",
+  "time": "2026-09-21 14:51:40.208391+00:00",
+  "type": "dev.knative.apiserver.resource.add",
+  "data": {
+      "apiVersion": "kubevirt.io/v1",
+      "kind": "VirtualMachine",
+      "metadata": {
+        "annotations": {
+          "kubemacpool.io/transaction-timestamp": "2026-09-21T14:51:40.168797975Z"
         },
-        "ComputeResource": {
-            "Name": "cls",
-            "ComputeResource": {
-                "Type": "ClusterComputeResource",
-                "Value": "domain-c7"
+        "creationTimestamp": "2026-09-21T14:51:40Z",
+        "generation": 1,
+        "managedFields": [
+          {
+            "apiVersion": "kubevirt.io/v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:spec": {
+                ".": {},
+                "f:dataVolumeTemplates": {},
+                "f:instancetype": {
+                  ".": {},
+                  "f:name": {}
+                },
+                "f:preference": {
+                  ".": {},
+                  "f:name": {}
+                },
+                "f:runStrategy": {},
+                "f:template": {
+                  ".": {},
+                  "f:metadata": {
+                    ".": {},
+                    "f:labels": {
+                      ".": {},
+                      "f:network.kubevirt.io/headlessService": {}
+                    }
+                  },
+                  "f:spec": {
+                    ".": {},
+                    "f:domain": {
+                      ".": {},
+                      "f:devices": {
+                        ".": {},
+                        "f:autoattachPodInterface": {},
+                        "f:disks": {},
+                        "f:interfaces": {}
+                      }
+                    },
+                    "f:networks": {},
+                    "f:subdomain": {},
+                    "f:volumes": {}
+                  }
+                }
+              }
+            },
+            "manager": "Mozilla",
+            "operation": "Update",
+            "time": "2026-09-21T14:51:40Z"
+          }
+        ],
+        "name": "rhel-vm",
+        "namespace": "kubevirt-eventing",
+        "resourceVersion": "309829497",
+        "uid": "7cf0a7fa-f2ec-44b2-8c80-b922d3f0e3c7"
+      },
+      "spec": {
+        "dataVolumeTemplates": [
+          {
+            "metadata": {
+              "name": "rhel-vm-volume"
+            },
+            "spec": {
+              "sourceRef": {
+                "kind": "DataSource",
+                "name": "rhel10",
+                "namespace": "openshift-virtualization-os-images"
+              },
+              "storage": {
+                "resources": {
+                  "requests": {
+                    "storage": "30Gi"
+                  }
+                },
+                "storageClassName": "synology-iscsi"
+              }
             }
+          }
+        ],
+        "instancetype": {
+          "name": "u1.medium"
         },
-        "Host": {
-            "Name": "10.185.22.74",
-            "Host": {
-                "Type": "HostSystem",
-                "Value": "host-21"
+        "preference": {
+          "name": "rhel.10"
+        },
+        "runStrategy": "RerunOnFailure",
+        "template": {
+          "metadata": {
+            "annotations": {
+              "kubevirt.io/pci-topology-version": "v3"
+            },
+            "labels": {
+              "network.kubevirt.io/headlessService": "headless"
             }
-        },
-        "Vm": {
-            "Name": "test-01",
-            "Vm": {
-                "Type": "VirtualMachine",
-                "Value": "vm-56"
-            }
-        },
-        "Ds": null,
-        "Net": null,
-        "Dvs": null,
-        "FullFormattedMessage": "test-01 on  10.0.0.1 in testDC is powered off",
-        "ChangeTag": "",
-        "Template": false
-    },
-    "datacontenttype": "application/json"
+          },
+          "spec": {
+            "architecture": "amd64",
+            "domain": {
+              "devices": {
+                "autoattachPodInterface": false,
+                "disks": [
+                  {
+                    "bootOrder": 1,
+                    "name": "rootdisk"
+                  },
+                  {
+                    "disk": {
+                      "bus": "virtio"
+                    },
+                    "name": "cloudinitdisk"
+                  }
+                ],
+                "interfaces": [
+                  {
+                    "bridge": {},
+                    "macAddress": "02:8f:fb:98:31:7c",
+                    "model": "virtio",
+                    "name": "default",
+                    "state": "up"
+                  }
+                ]
+              },
+              "firmware": {
+                "serial": "540a5bb4-bca9-45fe-b440-aea7e2470b4f",
+                "uuid": "dbd687ab-e6f8-400f-947f-a83928571e95"
+              },
+              "machine": {
+                "type": "pc-q35-rhel9.8.0"
+              },
+              "resources": {}
+            },
+            "networks": [
+              {
+                "multus": {
+                  "networkName": "default/localnet-50"
+                },
+                "name": "default"
+              }
+            ],
+            "subdomain": "headless",
+            "volumes": [
+              {
+                "dataVolume": {
+                  "name": "rhel-vm-volume"
+                },
+                "name": "rootdisk"
+              },
+              {
+                "cloudInitNoCloud": {
+                  "userData": "#cloud-config\nchpasswd:\n  expire: false\npassword: R3dH4t1!\nuser: rhel\n"
+                },
+                "name": "cloudinitdisk"
+              }
+            ]
+          }
+        }
+      }
+    }
 }
