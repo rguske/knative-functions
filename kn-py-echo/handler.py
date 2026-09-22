@@ -11,8 +11,10 @@ def echo():
         event = from_http_event(HTTPMessage(dict(request.headers), request.get_data()))
 
         data = event.get_data()
-        # hack to handle non JSON payload, e.g. xml
-        if not isinstance(data,dict):
+        # Preserve values that are already JSON-native (including None/null,
+        # e.g. events with no data body) as-is. Only stringify anything else
+        # (e.g. raw XML bytes) so it doesn't break json.dumps below.
+        if data is not None and not isinstance(data, (dict, list, str, int, float, bool)):
             data = str(data)
 
         e = {
