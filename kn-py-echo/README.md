@@ -77,9 +77,44 @@ curl -i -d@test/testevent.json localhost:8080
 You should see output similar to this below.
 
 ```json
-2026-09-21 08:50:33,781 INFO handler Thread-1 (process_request_thread) : "***cloud event*** {"attributes": {"id": "08179137-b8e0-4973-b05f-8f212bf5003b", "source": "https://10.0.0.1:443/sdk", "specversion": "1.0", "eventclass": "event", "type": "com.vmware.vsphere.VmPoweredOffEvent.v0", "time": "2020-02-11 21:29:54.905253+00:00", "datacontenttype": "application/json"}, "data": {"Key": 9902, "ChainId": 9895, "CreatedTime": "2020-02-11T21:28:23.677595Z", "UserName": "VSPHERE.LOCAL\\Administrator", "Datacenter": {"Name": "testDC", "Datacenter": {"Type": "Datacenter", "Value": "datacenter-2"}}, "ComputeResource": {"Name": "cls", "ComputeResource": {"Type": "ClusterComputeResource", "Value": "domain-c7"}}, "Host": {"Name": "10.185.22.74", "Host": {"Type": "HostSystem", "Value": "host-21"}}, "Vm": {"Name": "test-01", "Vm": {"Type": "VirtualMachine", "Value": "vm-56"}}, "Ds": null, "Net": null, "Dvs": null, "FullFormattedMessage": "test-01 on  10.0.0.1 in testDC is powered off", "ChangeTag": "", "Template": false}}
-2026-09-21 08:50:33,783 INFO werkzeug Thread-1 (process_request_thread) : 192.168.127.1 - - [21/Sep/2026 08:50:33] "POST / HTTP/1.1" 204 -
+2026-09-21 08:50:33,781 INFO handler Thread-1 (process_request_thread) : ***cloud event*** {
+  "context_attributes": {
+    "id": "08179137-b8e0-4973-b05f-8f212bf5003b",
+    "source": "https://10.0.0.1:443/sdk",
+    "specversion": "1.0",
+    "type": "com.vmware.vsphere.VmPoweredOffEvent.v0",
+    "time": "2020-02-11 21:29:54.905253+00:00",
+    "datacontenttype": "application/json"
+  },
+  "extensions": {
+    "eventclass": "event"
+  },
+  "data": {
+    "Key": 9902,
+    "ChainId": 9895,
+    "CreatedTime": "2020-02-11T21:28:23.677595Z",
+    "UserName": "VSPHERE.LOCAL\\Administrator",
+    "Datacenter": {"Name": "testDC", "Datacenter": {"Type": "Datacenter", "Value": "datacenter-2"}},
+    "ComputeResource": {"Name": "cls", "ComputeResource": {"Type": "ClusterComputeResource", "Value": "domain-c7"}},
+    "Host": {"Name": "10.185.22.74", "Host": {"Type": "HostSystem", "Value": "host-21"}},
+    "Vm": {"Name": "test-01", "Vm": {"Type": "VirtualMachine", "Value": "vm-56"}},
+    "Ds": null,
+    "Net": null,
+    "Dvs": null,
+    "FullFormattedMessage": "test-01 on  10.0.0.1 in testDC is powered off",
+    "ChangeTag": "",
+    "Template": false
+  }
+}
+2026-09-21 08:50:33,783 INFO werkzeug Thread-1 (process_request_thread) : 192.168.127.1 - - [21/Sep/2026 08:50:33] "POST / HTTP/1.1" 200 -
 ```
+
+The response body mirrors this same structure, split into `context_attributes`
+(the [CloudEvents spec](https://github.com/cloudevents/spec) core fields),
+`extensions` (any additional CloudEvent extension attributes, e.g. Knative's
+`kind`/`name`/`namespace`), and `data` (the event payload). The `extensions`
+and `data` keys are omitted entirely when not present on the incoming event,
+instead of rendering a misleading `null`.
 
 ## Step 3 - Deploy
 
