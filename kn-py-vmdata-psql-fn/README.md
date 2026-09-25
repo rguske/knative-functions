@@ -35,14 +35,39 @@ Clone the repository using `git clone` and change into the root of the cloned di
 
 - Specify an image name:
 
-```code
+```shell
 export IMAGE="quay.io/rguske/kn-py-psql-vmdata-fn:v1.0"
 ```
 
-- Create the container image:
+### Single-arch build
 
-```code
-podman build -t ${IMAGE} -f Containerfile
+```shell
+podman build -t ${IMAGE} -f Containerfile .
+```
+
+### Multi-arch build
+
+If the image needs to run on nodes with different CPU architectures (e.g.
+`amd64` and `arm64` in the same cluster), build a multi-arch manifest list
+instead of a single-platform image. On macOS, `podman machine` ships with
+the QEMU emulation needed to build for architectures other than the host's,
+so this works out of the box — no extra setup required.
+
+```shell
+podman manifest create ${IMAGE}
+podman build --platform=linux/amd64,linux/arm64 --manifest ${IMAGE} -f Containerfile .
+```
+
+Push the whole manifest list (both architectures) to the registry:
+
+```shell
+podman manifest push --all ${IMAGE} docker://${IMAGE}
+```
+
+Verify the pushed manifest references both architectures:
+
+```shell
+podman manifest inspect ${IMAGE}
 ```
 
 ## Test the funtion
@@ -132,9 +157,15 @@ and
 
 Push the newly created image to a working Container Image Registry instance.
 
-```code
+For a single-arch image:
+
+```shell
 podman push ${IMAGE}
 ```
+
+If you built a multi-arch manifest list instead (see **Multi-arch build**
+above), push it with `podman manifest push --all` as shown there, rather
+than a plain `podman push`.
 
 - Create the secret, which includes the DB data:
 

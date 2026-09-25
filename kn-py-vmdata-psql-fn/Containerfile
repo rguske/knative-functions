@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 registry.access.redhat.com/ubi9/python-312
+FROM registry.access.redhat.com/ubi9/python-312
 
 WORKDIR /app
 
