@@ -30,24 +30,28 @@ def get_db_connection():
         password=DB_PASSWORD
     )
 
+def _as_int(value, default=0):
+    if value is None or value == "":
+        return default
+    return int(value)
+
 @app.route("/", methods=["GET", "POST"])
-# def root():
-#     if request.method == "GET":
-#         return "OK", 200  # for readiness/liveness probes
-#     elif request.method == "POST":
-#         return jsonify({"message": "POST received at root"}), 200  # optional
-# def health():
-#     return "OK", 200
 def receive_event():
+    if request.method == "GET":
+        return "OK", 200
+
     print("📥 Received POST request")
     print("Headers:", dict(request.headers))
     print("Content-Type:", request.content_type)
 
-    # Pull values from CloudEvent headers
-    headers = request.headers
+    # Binary-mode CloudEvents: context attrs are Ce-* headers, payload is the body.
+    # EventTransform puts VM fields in data{}, not as Ce-* extension headers.
+    event = from_http(request.headers, request.get_data())
+    event_id = event.get("id")
+    data = event.data if isinstance(event.data, dict) else {}
 
-    event_id = headers.get("Ce-Id")
     print("CloudEvent ID:", event_id)
+    print("CloudEvent data:", data)
 
     # Skip duplicate events
     if event_id in seen_ids:
@@ -61,28 +65,31 @@ def receive_event():
     start_time = time.time()
 
     transformed_data = {
-        "type": headers.get("Ce-Type"),
-        "id": headers.get("Ce-Id"),
-        "kind": headers.get("Ce-Kind"),
-        "name": headers.get("Ce-Name"),
-        "namespace": headers.get("Ce-Namespace"),
-        "time": headers.get("Ce-Time"),
-        "cpucores": int(headers.get("Ce-Cpucores", 0)),
-        "cpusockets": int(headers.get("Ce-Cpusockets", 0)),
-        "memory": headers.get("Ce-Memory"),
-        "storageclass": headers.get("Ce-Storageclass"),
-        "network": headers.get("Ce-Network")
+        "type": data.get("type") or event.get("type"),
+        "id": data.get("id") or event_id,
+        "kind": data.get("kind"),
+        "name": data.get("name"),
+        "namespace": data.get("namespace"),
+        "time": data.get("time") or event.get("time"),
+        "instancetype": data.get("instancetype"),
+        "cpucores": _as_int(data.get("cpucores")),
+        "cpusockets": _as_int(data.get("cpusockets")),
+        "memory": data.get("memory"),
+        "storageclass": data.get("storageclass"),
+        "network": data.get("network"),
     }
 
     print("Transformed data:", transformed_data)
 
-    # DB insert logic here (same as before)
     try:
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("""
-            INSERT INTO virtual_machines (type, id, kind, name, namespace, time, cpucores, cpusockets, memory, storageclass, network)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO virtual_machines (
+                type, id, kind, name, namespace, time, instancetype,
+                cpucores, cpusockets, memory, storageclass, network
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             transformed_data["type"],
             transformed_data["id"],
@@ -90,11 +97,12 @@ def receive_event():
             transformed_data["name"],
             transformed_data["namespace"],
             transformed_data["time"],
+            transformed_data["instancetype"],
             transformed_data["cpucores"],
             transformed_data["cpusockets"],
             transformed_data["memory"],
             transformed_data["storageclass"],
-            transformed_data["network"]
+            transformed_data["network"],
         ))
         conn.commit()
         cur.close()
