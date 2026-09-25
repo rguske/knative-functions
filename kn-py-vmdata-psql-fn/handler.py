@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from cloudevents.http import from_http
+from cloudevents.v1.http import from_http
 import time
 import psycopg2
 import os
